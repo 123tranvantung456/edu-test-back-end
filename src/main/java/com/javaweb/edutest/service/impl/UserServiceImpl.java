@@ -38,15 +38,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUser(long userId, UserRequestDTO userRequestDTO) {
         User userCurrent = findUserById(userId);
-        
+        userMapper.mapToUser(userCurrent, userRequestDTO);
+        userRepository.save(userCurrent);
     }
 
     @Override
-    public void deleteUser(List<Long> id) {
-        userRepository.deleteAllById(id);
+    public void deleteUser(long userId) {
+        userRepository.deleteById(userId);
     }
 
     private User findUserById(long id) {
-        return userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        return userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException("User not found"));
     }
 }

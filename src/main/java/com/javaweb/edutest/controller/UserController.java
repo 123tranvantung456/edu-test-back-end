@@ -51,7 +51,7 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public ResponseData<?> updateUser(@RequestParam long userId,
+    public ResponseData<?> updateUser(@PathVariable long userId,
                                       @RequestBody UserRequestDTO userRequestDTO){
         try {
             userService.updateUser(userId, userRequestDTO);
@@ -65,10 +65,10 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{ids}")
-    public ResponseData<?> deleteUser(@PathVariable List<Long> ids){
+    @DeleteMapping("/{id}")
+    public ResponseData<?> deleteUser(@PathVariable long id){
         try {
-            userService.deleteUser(ids);
+            userService.deleteUser(id);
             return new ResponseData<>(HttpStatus.NO_CONTENT.value(),HttpStatus.NO_CONTENT.getReasonPhrase());
         } catch (Exception e){
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
