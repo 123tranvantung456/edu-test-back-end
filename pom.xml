@@ -29,7 +29,7 @@
     <properties>
         <java.version>22</java.version>
         <jjwt.version>0.11.5</jjwt.version>
-        <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
+        <org.mapstruct.version>1.6.3</org.mapstruct.version>
 
     </properties>
     <dependencies>

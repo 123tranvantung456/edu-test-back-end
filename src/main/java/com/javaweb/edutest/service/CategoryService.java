@@ -1,7 +1,6 @@
 package com.javaweb.edutest.service;
 
 import com.javaweb.edutest.dto.request.CategoryRequestDTO;
-import com.javaweb.edutest.dto.request.UserRequestDTO;
 import com.javaweb.edutest.dto.response.CategoryResponseDTO;
 
 import java.util.List;

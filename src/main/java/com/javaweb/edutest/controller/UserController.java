@@ -3,6 +3,7 @@ package com.javaweb.edutest.controller;
 import com.javaweb.edutest.dto.request.UserRequestDTO;
 import com.javaweb.edutest.dto.response.ResponseData;
 import com.javaweb.edutest.dto.response.UserResponseDTO;
+import com.javaweb.edutest.enums.UserStatus;
 import com.javaweb.edutest.exception.ResourceNotFoundException;
 import com.javaweb.edutest.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseData<UserResponseDTO> getUserById(@PathVariable int id){
+    public ResponseData<UserResponseDTO> getUserById(@PathVariable long id){
         try {
             return new ResponseData<>(userService.getUser(id), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
         }
@@ -58,11 +59,16 @@ public class UserController {
             return new ResponseData<>(HttpStatus.ACCEPTED.value(),HttpStatus.ACCEPTED.getReasonPhrase());
         }
         catch (ResourceNotFoundException e){
-            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), e.getMessage());
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
         catch (Exception e){
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
+    }
+
+    @PatchMapping("/{userId}")
+    public ResponseData<?> updateStatus(@PathVariable long userId, @RequestBody UserStatus userStatus){
+        return null;
     }
 
     @DeleteMapping("/{id}")

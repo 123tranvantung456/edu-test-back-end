@@ -26,7 +26,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{categoryId}")
-    public ResponseData<CategoryResponseDTO> getCategory(@PathVariable int categoryId) {
+    public ResponseData<CategoryResponseDTO> getCategory(@PathVariable long categoryId) {
         try {
             return new ResponseData<>(categoryService.getCategory(categoryId), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
         }
