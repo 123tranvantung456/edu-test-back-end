@@ -37,6 +37,7 @@ public class QuestionServiceImpl implements QuestionService {
     public long addQuestion(QuestionRequestDTO questionRequestDTO) {
         Question newQuestion = questionMapper.toQuestion(questionRequestDTO);
         addCategoriesToQuestion(questionRequestDTO.getCategoryIds(), newQuestion);
+        setQuestionToChoices(newQuestion);
         questionRepository.save(newQuestion);
         return newQuestion.getId();
     }
@@ -46,6 +47,7 @@ public class QuestionServiceImpl implements QuestionService {
         Question currentQuestion = findQuestionById(questionId);
         questionMapper.toQuestion(currentQuestion, questionRequestDTO);
         updateCategoriesToQuestion(questionRequestDTO.getCategoryIds(), currentQuestion);
+        setQuestionToChoices(currentQuestion);
         questionRepository.save(currentQuestion);
     }
 
@@ -76,6 +78,10 @@ public class QuestionServiceImpl implements QuestionService {
         else {
             question.getCategories().clear();
         }
+    }
+
+    private void setQuestionToChoices(Question question) {
+        question.getChoices().forEach(choice -> choice.setQuestion(question));
     }
 
     private Set<Category> fetchCategoryByIds(List<Long> categoryIds) {

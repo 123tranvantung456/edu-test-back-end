@@ -3,7 +3,6 @@ package com.javaweb.edutest.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,7 +10,6 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@ToString
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +17,7 @@ public class Question {
 
     private String content;
 
-    private String answer;
+    private String explanation;
 
     @ManyToMany
     @JoinTable(name = "question_category",
@@ -27,6 +25,6 @@ public class Question {
             inverseJoinColumns = @JoinColumn (name = "category_id", nullable = false))
     private Set<Category> categories = new HashSet<>();
 
-    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private Set<Choice> choices = new HashSet<>();
 }

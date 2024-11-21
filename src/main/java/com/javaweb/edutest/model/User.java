@@ -16,15 +16,18 @@ public class User {
     private Long id;
     private String username;
 
-    @OneToMany(mappedBy = "user")
-    private Set<TestHistory> historyOfTests = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "user")
+    private Role role;
+
+    @OneToMany(mappedBy = "owner")
+    private Set<Test> tests = new HashSet<>();
 
     @OneToMany(mappedBy = "author")
     private Set<Comment> comments = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "user")
-    private Role role;
+    @OneToMany(mappedBy = "user")
+    private Set<TestHistory> historyOfTests = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
@@ -32,7 +35,8 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "group_id")
     )
-    private Set<Group> groups = new HashSet<>();
+    private Set<Group> ownerGroups = new HashSet<>();
 
-    
+    @OneToMany(mappedBy = "owner")
+    private Set<Group> memberGroups = new HashSet<>();
 }

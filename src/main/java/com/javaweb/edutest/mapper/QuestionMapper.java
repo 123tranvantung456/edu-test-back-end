@@ -1,9 +1,11 @@
 package com.javaweb.edutest.mapper;
 
+import com.javaweb.edutest.dto.request.ChoiceRequestDTO;
 import com.javaweb.edutest.dto.request.QuestionRequestDTO;
 import com.javaweb.edutest.dto.response.CategoryResponseDTO;
 import com.javaweb.edutest.dto.response.QuestionResponseDTO;
 import com.javaweb.edutest.model.Category;
+import com.javaweb.edutest.model.Choice;
 import com.javaweb.edutest.model.Question;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

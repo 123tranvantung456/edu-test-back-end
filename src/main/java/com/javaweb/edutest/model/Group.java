@@ -10,6 +10,7 @@ import java.util.HashSet;
 @Entity
 @Getter
 @Setter
+@Table(name = "class")
 public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,13 +19,18 @@ public class Group {
     private String description;
     private String code;
 
-    @ManyToMany(mappedBy = "groups")
+    @ManyToMany(mappedBy = "ownerGroups")
     private Set<User> members = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
     private User owner;
 
-    @OneToMany
+    @ManyToMany
+    @JoinTable(
+            name = "group_test",
+            joinColumns = @JoinColumn(name = "group_id"),
+            inverseJoinColumns = @JoinColumn(name = "test_id")
+    )
     private Set<Test> tests = new HashSet<>();
 }

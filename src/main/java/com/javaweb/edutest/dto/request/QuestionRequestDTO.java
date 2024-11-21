@@ -9,6 +9,7 @@ import java.util.List;
 @Setter
 public class QuestionRequestDTO {
     private String content;
-    private String answer;
+    private String explanation;
     private List<Long> categoryIds;
+    private List <ChoiceRequestDTO> choices;
 }

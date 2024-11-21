@@ -26,6 +26,7 @@ public class QuestionController {
         try {
             return new ResponseData<>(questionService.getQuestions(), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
         }catch (Exception e){
+            log.error(e.getMessage());
             return new ResponseData<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
         }
     }
@@ -35,6 +36,7 @@ public class QuestionController {
         try {
             return new ResponseData<>(questionService.getQuestionById(questionId), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
         }catch (Exception e){
+            log.error(e.getMessage());
             return new ResponseData<>(HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
         }
     }

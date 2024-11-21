@@ -15,9 +15,21 @@ public class Test {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String name;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @ManyToMany(mappedBy = "tests")
+    private Set<Group> groups = new HashSet<>();
+
     @OneToMany(mappedBy = "test")
     private Set<TestHistory> historyOfTests = new HashSet<>();
 
     @OneToMany(mappedBy = "test")
-    private Set<Test> tests = new HashSet<>();
+    private Set<RootComment> rootComments = new HashSet<>();
+
+    @ManyToMany
+    private Set<Question> questions = new HashSet<>();
 }
