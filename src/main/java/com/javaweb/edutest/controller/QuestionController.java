@@ -70,7 +70,7 @@ public class QuestionController {
     }
 
     @PatchMapping("/{questionId}")
-    public ResponseData<?> updateCategoriesOfQuest(@PathVariable Long questionId,
+    public ResponseData<?> updateCategoriesOfQuestion(@PathVariable Long questionId,
                                                    @RequestBody Map<String, List<Long>> request){
         try {
             questionService.updateCategoriesOfQuestion(questionId, request.get("categoryIds"));

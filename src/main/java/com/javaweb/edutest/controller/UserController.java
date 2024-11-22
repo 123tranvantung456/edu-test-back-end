@@ -35,7 +35,7 @@ public class UserController {
             return new ResponseData<>(userService.getUser(id), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
         }
         catch (ResourceNotFoundException e){
-            return new ResponseData<>(HttpStatus.NOT_FOUND.value(), e.getMessage());
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), e.getMessage());
         }
         catch (Exception e){
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());

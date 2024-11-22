@@ -1,13 +1,12 @@
 package com.javaweb.edutest.service.impl;
 
 import com.javaweb.edutest.dto.request.CommentRequestDTO;
+import com.javaweb.edutest.dto.request.ReplyCommentRequestDTO;
+import com.javaweb.edutest.dto.request.RootCommentRequestDTO;
 import com.javaweb.edutest.dto.response.CommentResponseDTO;
 import com.javaweb.edutest.exception.ResourceNotFoundException;
 import com.javaweb.edutest.mapper.CommentMapper;
-import com.javaweb.edutest.model.Comment;
-import com.javaweb.edutest.model.RootComment;
-import com.javaweb.edutest.model.Test;
-import com.javaweb.edutest.model.User;
+import com.javaweb.edutest.model.*;
 import com.javaweb.edutest.repository.*;
 import com.javaweb.edutest.service.CommentService;
 import lombok.RequiredArgsConstructor;
@@ -19,44 +18,57 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
     private final CommentMapper commentMapper;
+    private final CommentRepository commentRepository;
     private final RootCommentRepository rootCommentRepository;
     private final ReplyCommentRepository replyCommentRepository;
-    private final CommentRepository commentRepository;
-    private final UserRepository UserRepository;
+    private final UserRepository userRepository;
     private final TestRepository testRepository;
 
     @Override
-    public List<CommentResponseDTO> getComments() {
-        return commentMapper.toCommentResponseDTOList(rootCommentRepository.findAll());
-    }
-
-    @Override
     public CommentResponseDTO getComment(long commentId) {
-        return commentMapper.toCommentResponseDTO(findCommentById(commentId));
+        var commentResponseDTO = commentMapper.toCommentResponseDTO(findCommentById(commentId));
+        addReplyCommentCountToRootCommentResponseDTO(commentResponseDTO);
+        return commentResponseDTO;
     }
 
     @Override
-    public List<CommentResponseDTO> getCommentsInTest(long testId) {
+    public List<CommentResponseDTO> getRootCommentsInTest(long testId) {
         List<RootComment> commentCurrent = rootCommentRepository.findByTest_IdOrderByIdAsc(testId);
-        List<CommentResponseDTO> results = commentMapper.toCommentResponseDTOList(commentCurrent);
-        results.forEach(commentResponseDTO -> commentResponseDTO.setSubCommentCount(
-                replyCommentRepository.countByParentComment_Id(commentResponseDTO.getId())));
+        List<CommentResponseDTO> results = commentMapper.toRootCommentResponseDTOs(commentCurrent);
+        addReplyCommentCountToRootCommentResponseDTOs(results);
         return results;
     }
 
     @Override
-    public long addComment(CommentRequestDTO commentRequestDTO) {
-//        Comment newComment = commentMapper.toComment(commentRequestDTO);
-//        newComment.setAuthor(findUser(1L));
-//        newComment.setParentComment(findCommentById(commentRequestDTO.getParentId()));
-//        commentRepository.save(newComment);
-//        return newComment.getId();
-        return 1;
+    public List<CommentResponseDTO> getReplyCommentsOfCurrentComment(long currentCommentId) {
+        var replyComments = replyCommentRepository.findByParentComment_Id(currentCommentId);
+        var replyCommentDTOs = commentMapper.toReplyCommentResponseDTOs(replyComments);
+        addReplyCommentCountToRootCommentResponseDTOs(replyCommentDTOs);
+        return replyCommentDTOs;
     }
 
     @Override
-    public void updateComment(CommentRequestDTO commentRequestDTO) {
+    public long addRootComment(RootCommentRequestDTO rootCommentRequestDTO) {
+        RootComment newComment = commentMapper.toComment(rootCommentRequestDTO);
+        newComment.setAuthor(findUser(1L));
+        newComment.setTest(findTestById(rootCommentRequestDTO.getTestId()));
+        rootCommentRepository.save(newComment);
+        return newComment.getId();
+    }
 
+    @Override
+    public long addReplyComment(ReplyCommentRequestDTO replyCommentRequestDTO){
+        ReplyComment newComment = commentMapper.toComment(replyCommentRequestDTO);
+        newComment.setParentComment(findCommentById(replyCommentRequestDTO.getParentCommentId()));
+        replyCommentRepository.save(newComment);
+        return newComment.getId();
+    }
+
+    @Override
+    public void updateComment(long commentId, CommentRequestDTO commentRequestDTO) {
+        Comment currentComment = findCommentById(commentId);
+        commentMapper.updateComment(currentComment, commentRequestDTO);
+        commentRepository.save(currentComment);
     }
 
     @Override
@@ -64,8 +76,12 @@ public class CommentServiceImpl implements CommentService {
         commentRepository.deleteById(commentId);
     }
 
-    private void addReplyCommentCountToRootCommentResponseDTO(List<RootComment> rootComment) {
-        
+    private void addReplyCommentCountToRootCommentResponseDTOs(List<CommentResponseDTO> commentResponseDTOs) {
+        commentResponseDTOs.forEach(this::addReplyCommentCountToRootCommentResponseDTO);
+    }
+
+    private void addReplyCommentCountToRootCommentResponseDTO(CommentResponseDTO commentResponseDTO) {
+        commentResponseDTO.setSubCommentCount(replyCommentRepository.countByParentComment_Id(commentResponseDTO.getId()));
     }
 
     private Test findTestById(long testId) {
@@ -80,7 +96,9 @@ public class CommentServiceImpl implements CommentService {
         );
     }
 
-    private User findUser(long id) {
-        return UserRepository.findById(id).get();
+    private User findUser(long userId) {
+        return userRepository.findById(userId).orElseThrow(
+                () -> new ResourceNotFoundException("user not found with id : " +userId)
+        );
     }
 }

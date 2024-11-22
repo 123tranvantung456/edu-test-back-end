@@ -13,5 +13,4 @@ public class ReplyComment extends Comment{
     @ManyToOne
     @JoinColumn(name = "parent_comment_id")
     private Comment parentComment;
-
 }
