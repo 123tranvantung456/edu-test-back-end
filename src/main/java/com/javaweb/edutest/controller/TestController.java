@@ -20,7 +20,7 @@ public class TestController {
     @GetMapping
     public ResponseData<?> getTests() {
         try {
-            return null;
+            return new ResponseData<>(testService.getTests(), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
@@ -29,7 +29,7 @@ public class TestController {
     @GetMapping("/{testId}")
     public ResponseData<?> getTest(@PathVariable long testId) {
         try {
-            return null;
+            return new ResponseData<>(testService.getTest(testId), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
@@ -38,7 +38,7 @@ public class TestController {
     @GetMapping("/{testId}/questions")
     public ResponseData<?> getQuestionsInTest(@PathVariable long testId) {
         try {
-            return null;
+            return new ResponseData<>(testService.getTest(testId), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
@@ -47,7 +47,7 @@ public class TestController {
     @PostMapping
     public ResponseData<?> addTest(@RequestBody Test test) {
         try {
-            return null;
+            return new ResponseData<>(testService.addTest(), HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }

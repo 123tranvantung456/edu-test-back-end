@@ -1,6 +1,6 @@
 package com.javaweb.edutest.controller;
 
-import com.javaweb.edutest.dto.response.GroupResponseDTO;
+import com.javaweb.edutest.dto.request.GroupRequestDTO;
 import com.javaweb.edutest.dto.response.ResponseData;
 import com.javaweb.edutest.service.GroupService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ public class GroupController {
     @GetMapping
     public ResponseData<?> getGroups() {
         try {
-            return null;
+            return new ResponseData<>(groupService.getGroups(), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
@@ -30,7 +30,7 @@ public class GroupController {
     @GetMapping("/{groupId}")
     public ResponseData<?> getGroup(@PathVariable long groupId) {
         try {
-            return null;
+            return new ResponseData<>(groupService.getGroup(groupId), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
@@ -39,16 +39,16 @@ public class GroupController {
     @GetMapping("/user/{userId}")
     public ResponseData<?> getGroupOfUser(@PathVariable long userId) {
         try {
-            return null;
+            return new ResponseData<>(groupService.getGroupsOfUser(userId), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
     }
 
     @PostMapping
-    public ResponseData<?> addGroup(@RequestBody GroupResponseDTO groupResponseDTO) {
+    public ResponseData<?> addGroup(@RequestBody GroupRequestDTO groupRequestDTO) {
         try {
-            return null;
+            return new ResponseData<>(groupService.addGroup(groupRequestDTO), HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
@@ -57,7 +57,7 @@ public class GroupController {
     @PostMapping("{groupId}/member")
     public ResponseData<?> addMemberToGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request){
         try {
-            return null;
+            return new ResponseData<>(groupService.addMembersToGroup(groupId, request), HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
@@ -66,34 +66,35 @@ public class GroupController {
     @PostMapping("{groupId}/test")
     public ResponseData<?> addTestToGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request) {
         try {
-            return null;
+            return new ResponseData<>(groupService.addTestsToGroup(groupId, request), HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
     }
 
     @PutMapping("{groupId}/member")
-    public ResponseData<?> updateMemberToGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request){
+    public ResponseData<?> updateMemberInGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request){
         try {
-            return null;
+            return new ResponseData<>(groupService.updateMembersInGroup(groupId , request), HttpStatus.ACCEPTED.value(), HttpStatus.ACCEPTED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
     }
 
     @PutMapping("{groupId}/test")
-    public ResponseData<?> updateTestToGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request) {
+    public ResponseData<?> updateTestInGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request) {
         try {
-            return null;
+            return new ResponseData<>(groupService.updateTestsInGroup(groupId , request), HttpStatus.ACCEPTED.value(), HttpStatus.ACCEPTED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
     }
 
     @PutMapping("/{groupId}")
-    public ResponseData<?> updateGroup(@PathVariable long groupId, @RequestBody GroupResponseDTO groupResponseDTO) {
+    public ResponseData<?> updateGroup(@PathVariable long groupId, @RequestBody GroupRequestDTO groupRequestDTO) {
         try {
-            return null;
+            groupService.updateGroup(groupId, groupRequestDTO);
+            return new ResponseData<>(HttpStatus.ACCEPTED.value(), HttpStatus.ACCEPTED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
@@ -102,7 +103,8 @@ public class GroupController {
     @DeleteMapping("/{groupId}")
     public ResponseData<?> deleteGroup(@PathVariable long groupId) {
         try {
-            return null;
+            groupService.deleteGroup(groupId);
+            return new ResponseData<>(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
