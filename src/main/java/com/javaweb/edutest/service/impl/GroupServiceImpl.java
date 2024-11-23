@@ -59,8 +59,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Long> addTestsToGroup(long groupId, Map<String, List<Long>> request) {
-        return List.of();
+    public void addTestsToGroup(long groupId, Map<String, List<Long>> request) {
     }
 
     @Override
@@ -69,13 +68,13 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public List<Long> updateMembersInGroup(long groupId, Map<String, List<Long>> request) {
-        return List.of();
+    public void updateMembersInGroup(long groupId, Map<String, List<Long>> request) {
+        
     }
 
     @Override
-    public List<Long> updateTestsInGroup(long groupId, Map<String, List<Long>> request) {
-        return List.of();
+    public void updateTestsInGroup(long groupId, Map<String, List<Long>> request) {
+
     }
 
     @Override

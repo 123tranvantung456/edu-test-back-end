@@ -57,7 +57,7 @@ public class GroupController {
     @PostMapping("{groupId}/member")
     public ResponseData<?> addMemberToGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request){
         try {
-            return new ResponseData<>(groupService.addMembersToGroup(groupId, request), HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
+            return new ResponseData<>(HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
@@ -66,7 +66,7 @@ public class GroupController {
     @PostMapping("{groupId}/test")
     public ResponseData<?> addTestToGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request) {
         try {
-            return new ResponseData<>(groupService.addTestsToGroup(groupId, request), HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
+            return new ResponseData<>(HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
@@ -75,7 +75,7 @@ public class GroupController {
     @PutMapping("{groupId}/member")
     public ResponseData<?> updateMemberInGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request){
         try {
-            return new ResponseData<>(groupService.updateMembersInGroup(groupId , request), HttpStatus.ACCEPTED.value(), HttpStatus.ACCEPTED.getReasonPhrase());
+            return new ResponseData<>(HttpStatus.ACCEPTED.value(), HttpStatus.ACCEPTED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
@@ -84,7 +84,7 @@ public class GroupController {
     @PutMapping("{groupId}/test")
     public ResponseData<?> updateTestInGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request) {
         try {
-            return new ResponseData<>(groupService.updateTestsInGroup(groupId , request), HttpStatus.ACCEPTED.value(), HttpStatus.ACCEPTED.getReasonPhrase());
+            return new ResponseData<>(HttpStatus.ACCEPTED.value(), HttpStatus.ACCEPTED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }

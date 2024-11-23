@@ -9,10 +9,10 @@ public interface GroupService {
     GroupResponseDTO getGroup(long groupId);
     List<GroupResponseDTO> getGroupsOfUser(long userId);
     long addGroup(GroupRequestDTO groupRequestDTO);
-    List<Long> addMembersToGroup(long groupId, Map<String, List<Long> > request);
-    List<Long> addTestsToGroup(long groupId, Map<String, List<Long> > request);
+    void addMembersToGroup(long groupId, Map<String, List<Long> > request);
+    void addTestsToGroup(long groupId, Map<String, List<Long> > request);
     void updateGroup(long groupId, GroupRequestDTO groupRequestDTO);
-    List<Long> updateMembersInGroup(long groupId, Map<String, List<Long> > request);
-    List<Long> updateTestsInGroup(long groupId, Map<String, List<Long> > request);
+    void updateMembersInGroup(long groupId, Map<String, List<Long> > request);
+    void updateTestsInGroup(long groupId, Map<String, List<Long> > request);
     void deleteGroup(long groupId);
 }
