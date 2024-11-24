@@ -27,4 +27,7 @@ public class Question {
 
     @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
     private Set<Choice> choices = new HashSet<>();
+
+    @OneToMany(mappedBy = "question", cascade = {CascadeType.PERSIST})
+    private Set<Question_Test> questionTests = new HashSet<>();
 }

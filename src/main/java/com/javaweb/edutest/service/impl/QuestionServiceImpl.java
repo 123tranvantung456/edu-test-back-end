@@ -6,15 +6,19 @@ import com.javaweb.edutest.exception.ResourceNotFoundException;
 import com.javaweb.edutest.mapper.QuestionMapper;
 import com.javaweb.edutest.model.Category;
 import com.javaweb.edutest.model.Question;
+import com.javaweb.edutest.model.Question_Test;
+import com.javaweb.edutest.model.compositekey.Question_TestPK;
 import com.javaweb.edutest.repository.CategoryRepository;
 import com.javaweb.edutest.repository.QuestionRepository;
+import com.javaweb.edutest.repository.Question_TestRepository;
+import com.javaweb.edutest.repository.TestRepository;
 import com.javaweb.edutest.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +26,8 @@ public class QuestionServiceImpl implements QuestionService {
     private final QuestionMapper questionMapper;
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
+    private final TestRepository testRepository;
+    private final Question_TestRepository question_testRepository;
 
     @Override
     public List<QuestionResponseDTO> getQuestions() {
@@ -34,12 +40,53 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
+    public List<QuestionResponseDTO> getQuestionsInTest(long testId) {
+        return questionMapper.toQuestionResponseDTOs(questionRepository.findByQuestionTests_Test_Id(testId));
+    }
+
+    @Override
     public long addQuestion(QuestionRequestDTO questionRequestDTO) {
-        Question newQuestion = questionMapper.toQuestion(questionRequestDTO);
-        addCategoriesToQuestion(questionRequestDTO.getCategoryIds(), newQuestion);
-        setQuestionToChoices(newQuestion);
-        questionRepository.save(newQuestion);
+        return addQuestionToDB(questionRequestDTO).getId();
+    }
+
+    @Override
+    @Transactional
+    public long addQuestionToTest(long testId, QuestionRequestDTO questionRequestDTO) {
+        var newQuestion = addQuestionToDB(questionRequestDTO);
+        var test = testRepository.findById(testId).orElseThrow(
+                () -> new ResourceNotFoundException("test not found with id " +testId)
+        );
+        Question_Test questionTest = Question_Test.builder()
+                .id(Question_TestPK.builder()
+                        .questionId(newQuestion.getId())
+                        .testId(test.getId())
+                        .build())
+                .question(newQuestion)
+                .test(test)
+                .build();
+        question_testRepository.saveAndFlush(questionTest);
         return newQuestion.getId();
+    }
+
+    @Override
+    public void addQuestionFromLibraryToTest(long testId, Map<String, List<Long>> request) {
+        var test = testRepository.findById(testId).orElseThrow(
+                () -> new ResourceNotFoundException("test not found with id " +testId)
+        );
+        List<Long> questionIds = request.get("questionIds");
+        var questionTests = new ArrayList<Question_Test>();
+        questionIds.forEach(questionId ->{
+            Question_Test questionTest = Question_Test.builder()
+                    .id(Question_TestPK.builder()
+                            .questionId(questionId)
+                            .testId(test.getId())
+                            .build())
+                    .test(test)
+                    .question(findQuestionById(questionId))
+                    .build();
+            questionTests.add(questionTest);
+            }
+            );
     }
 
     @Override
@@ -99,5 +146,12 @@ public class QuestionServiceImpl implements QuestionService {
     private Category findCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId).orElseThrow(
                 () -> new ResourceNotFoundException("Category not found with id " + categoryId));
+    }
+
+    private Question addQuestionToDB(QuestionRequestDTO questionRequestDTO) {
+        Question newQuestion = questionMapper.toQuestion(questionRequestDTO);
+        addCategoriesToQuestion(questionRequestDTO.getCategoryIds(), newQuestion);
+        setQuestionToChoices(newQuestion);
+        return questionRepository.save(newQuestion);
     }
 }

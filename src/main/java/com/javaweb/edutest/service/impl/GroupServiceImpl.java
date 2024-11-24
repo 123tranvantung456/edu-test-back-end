@@ -5,6 +5,7 @@ import com.javaweb.edutest.dto.response.GroupResponseDTO;
 import com.javaweb.edutest.exception.ResourceNotFoundException;
 import com.javaweb.edutest.mapper.GroupMapper;
 import com.javaweb.edutest.model.Group;
+import com.javaweb.edutest.model.Test;
 import com.javaweb.edutest.model.User;
 import com.javaweb.edutest.repository.GroupRepository;
 import com.javaweb.edutest.repository.TestRepository;
@@ -50,31 +51,53 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void addMembersToGroup(long groupId,  Map<String, List<Long>> request) {
-        List<Long> membersIds = request.get("groupIds");
+        List<Long> membersIds = request.get("memberIds");
         Group currentGroup = findGroupById(groupId);
         var memberInGroups = currentGroup.getMembers();
         var users = new HashSet<User>();
         membersIds.forEach(membersId -> users.add(findUserById(membersId)));
+        currentGroup.getMembers().addAll(users);
         memberInGroups.addAll(users);
     }
 
     @Override
     public void addTestsToGroup(long groupId, Map<String, List<Long>> request) {
+        List<Long> testsIds = request.get("testIds");
+        Group currentGroup = findGroupById(groupId);
+        var testsInGroups = currentGroup.getTests();
+        var tests = new HashSet<Test>();
+        testsIds.forEach(testId -> tests.add(findTestById(testId)));
+        currentGroup.getTests().addAll(tests);
+        testsInGroups.addAll(tests);
     }
 
     @Override
     public void updateGroup(long groupId, GroupRequestDTO groupRequestDTO) {
-
+        Group currentGroup = findGroupById(groupId);
+        groupMapper.updateGroup(currentGroup, groupRequestDTO);
+        groupRepository.save(currentGroup);
     }
 
     @Override
     public void updateMembersInGroup(long groupId, Map<String, List<Long>> request) {
-        
+        List<Long> membersIds = request.get("memberIds");
+        Group currentGroup = findGroupById(groupId);
+        var membersInGroups = currentGroup.getMembers();
+        var users = new HashSet<User>();
+        membersIds.forEach(membersId -> users.add(findUserById(membersId)));
+        currentGroup.setMembers(users);
+        membersInGroups.addAll(users);
     }
 
     @Override
     public void updateTestsInGroup(long groupId, Map<String, List<Long>> request) {
-
+        List<Long> testsIds = request.get("testIds");
+        Group currentGroup = findGroupById(groupId);
+        var testsInGroups = currentGroup.getTests();
+        var tests = new HashSet<Test>();
+        testsIds.forEach(testsId -> tests.add(findTestById(testsId)));
+        currentGroup.setTests(tests);
+        testsInGroups.addAll(tests);
     }
 
     @Override
@@ -91,6 +114,12 @@ public class GroupServiceImpl implements GroupService {
     private User findUserById(long userId) {
         return userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("group not found with id: " + userId)
+        );
+    }
+
+    private Test findTestById(long testId) {
+        return testRepository.findById(testId).orElseThrow(
+                () -> new ResourceNotFoundException("test not found with id: " + testId)
         );
     }
 }

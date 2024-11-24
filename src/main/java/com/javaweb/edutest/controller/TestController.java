@@ -1,14 +1,17 @@
 package com.javaweb.edutest.controller;
 
+import com.javaweb.edutest.dto.request.QuestionRequestDTO;
+import com.javaweb.edutest.dto.request.TestRequestDTO;
 import com.javaweb.edutest.dto.response.ResponseData;
 import com.javaweb.edutest.model.Question;
 import com.javaweb.edutest.model.Test;
+import com.javaweb.edutest.service.QuestionService;
 import com.javaweb.edutest.service.TestService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @RestController
@@ -16,6 +19,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TestController {
     private final TestService testService;
+    private final QuestionService questionService;
 
     @GetMapping
     public ResponseData<?> getTests() {
@@ -35,36 +39,29 @@ public class TestController {
         }
     }
 
-    @GetMapping("/{testId}/questions")
-    public ResponseData<?> getQuestionsInTest(@PathVariable long testId) {
-        try {
-            return new ResponseData<>(testService.getTest(testId), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
-        } catch (Exception e) {
-            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
-        }
-    }
-
     @PostMapping
-    public ResponseData<?> addTest(@RequestBody Test test) {
+    public ResponseData<?> addTest(@RequestBody TestRequestDTO testRequestDTO) {
         try {
-            return new ResponseData<>(testService.addTest(), HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
+            return new ResponseData<>(testService.addTest(testRequestDTO), HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
     }
 
-    @PostMapping("/{testId}/questions")
-    public ResponseData<?> addQuestionsToTest(@PathVariable long testId, @RequestBody List<Question> questions) {
+    @PostMapping("/{testId}/question")
+    public ResponseData<?> addQuestionsToTest(@PathVariable long testId, @RequestBody QuestionRequestDTO questionRequestDTO) {
         try {
-            return null;
+            return new ResponseData<>(questionService.addQuestionToTest(testId, questionRequestDTO), HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
         } catch (Exception e) {
+            log.error(e.getMessage());
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
     }
 
     @PostMapping("/{testId}/questions/from-library")
-    public ResponseData<?> addQuestionsFromLibraryToTest(@PathVariable long testId, @RequestBody List<Long> questionIds) {
+    public ResponseData<?> addQuestionsFromLibraryToTest(@PathVariable long testId, @RequestBody Map<String, List<Long>> request) {
         try {
+            questionService.addQuestionFromLibraryToTest(testId, request);
             return new ResponseData<>(HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
@@ -72,25 +69,27 @@ public class TestController {
     }
 
     @PutMapping("/{testId}")
-    public ResponseData<?> updateTest(@PathVariable long testId, @RequestBody Test test) {
+    public ResponseData<?> updateTest(@PathVariable long testId, @RequestBody TestRequestDTO testRequestDTO) {
         try {
-            return null;
+            testService.updateTest(testId, testRequestDTO);
+            return new ResponseData<>(HttpStatus.ACCEPTED.value(), HttpStatus.ACCEPTED.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
     }
 
-    @DeleteMapping
+    @DeleteMapping("/{testId}")
     public ResponseData<?> deleteTest(@PathVariable long testId) {
         try {
-            return null;
+            testService.deleteTest(testId);
+            return new ResponseData<>(HttpStatus.NO_CONTENT.value(), HttpStatus.NO_CONTENT.getReasonPhrase());
         } catch (Exception e) {
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }
     }
 
-    @DeleteMapping("/{testId}/questions")
-    public ResponseData<?> updateQuestionsInTest(@PathVariable long testId, @RequestBody List<Question> questions) {
+    @DeleteMapping("/{testId}/question/{questionId}")
+    public ResponseData<?> updateQuestionsInTest(@PathVariable long testId, @PathVariable long questionId) {
         try {
             return null;
         } catch (Exception e) {

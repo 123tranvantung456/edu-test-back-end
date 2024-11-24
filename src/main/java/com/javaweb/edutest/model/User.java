@@ -16,7 +16,7 @@ public class User {
     private Long id;
     private String username;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user")
     private Role role;
 

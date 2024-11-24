@@ -17,7 +17,7 @@ public class Test {
 
     private String name;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
 
@@ -30,6 +30,6 @@ public class Test {
     @OneToMany(mappedBy = "test")
     private Set<RootComment> rootComments = new HashSet<>();
 
-    @ManyToMany
-    private Set<Question> questions = new HashSet<>();
+    @OneToMany(mappedBy = "test")
+    private Set<Question_Test> questionTests;
 }

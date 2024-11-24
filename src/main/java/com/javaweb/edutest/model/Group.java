@@ -22,7 +22,7 @@ public class Group {
     @ManyToMany(mappedBy = "ownerGroups")
     private Set<User> members = new HashSet<>();
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
     private User owner;
 

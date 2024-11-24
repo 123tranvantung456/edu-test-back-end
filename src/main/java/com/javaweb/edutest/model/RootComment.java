@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class RootComment extends Comment{
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "test_id")
     private Test test;
 }

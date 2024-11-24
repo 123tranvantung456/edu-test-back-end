@@ -72,8 +72,8 @@ public class GroupController {
         }
     }
 
-    @PutMapping("{groupId}/member")
-    public ResponseData<?> updateMemberInGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request){
+    @DeleteMapping("{groupId}/member")
+    public ResponseData<?> deleteMemberInGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request){
         try {
             return new ResponseData<>(HttpStatus.ACCEPTED.value(), HttpStatus.ACCEPTED.getReasonPhrase());
         } catch (Exception e) {
@@ -82,7 +82,7 @@ public class GroupController {
     }
 
     @PutMapping("{groupId}/test")
-    public ResponseData<?> updateTestInGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request) {
+    public ResponseData<?> deleteTestInGroup(@PathVariable long groupId, @RequestBody Map<String, List<Long>> request) {
         try {
             return new ResponseData<>(HttpStatus.ACCEPTED.value(), HttpStatus.ACCEPTED.getReasonPhrase());
         } catch (Exception e) {

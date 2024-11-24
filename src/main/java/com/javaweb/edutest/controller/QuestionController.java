@@ -41,6 +41,15 @@ public class QuestionController {
         }
     }
 
+    @GetMapping("tests/{testId}")
+    public ResponseData<?> getQuestionsInTest(@PathVariable long testId) {
+        try {
+            return new ResponseData<>(questionService.getQuestionsInTest(testId), HttpStatus.OK.value(), HttpStatus.OK.getReasonPhrase());
+        } catch (Exception e) {
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+        }
+    }
+
     @PostMapping
     public ResponseData<Long> addQuestion(@RequestBody QuestionRequestDTO questionRequestDTO){
         try {
