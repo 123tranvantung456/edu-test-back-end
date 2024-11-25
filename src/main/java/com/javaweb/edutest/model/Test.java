@@ -30,6 +30,6 @@ public class Test {
     @OneToMany(mappedBy = "test")
     private Set<RootComment> rootComments = new HashSet<>();
 
-    @OneToMany(mappedBy = "test")
-    private Set<Question_Test> questionTests;
+    @OneToMany(mappedBy = "test", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private Set<QuestionTest> questionTests;
 }

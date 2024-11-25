@@ -9,7 +9,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Question_TestPK {
+public class QuestionTestPK {
     private long testId;
     private long questionId;
 }

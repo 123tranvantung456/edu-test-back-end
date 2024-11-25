@@ -1,6 +1,6 @@
 package com.javaweb.edutest.model;
 
-import com.javaweb.edutest.model.compositekey.Question_TestPK;
+import com.javaweb.edutest.model.compositekey.QuestionTestPK;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,9 +10,10 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Question_Test {
+@Table(name = "question_test")
+public class QuestionTest {
     @EmbeddedId
-    private Question_TestPK id;
+    private QuestionTestPK id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("questionId")

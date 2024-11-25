@@ -53,6 +53,7 @@ public class TestController {
         try {
             return new ResponseData<>(questionService.addQuestionToTest(testId, questionRequestDTO), HttpStatus.CREATED.value(), HttpStatus.CREATED.getReasonPhrase());
         } catch (Exception e) {
+            e.printStackTrace();
             log.error(e.getMessage());
             return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
         }

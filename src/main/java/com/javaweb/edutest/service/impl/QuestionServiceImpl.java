@@ -6,11 +6,10 @@ import com.javaweb.edutest.exception.ResourceNotFoundException;
 import com.javaweb.edutest.mapper.QuestionMapper;
 import com.javaweb.edutest.model.Category;
 import com.javaweb.edutest.model.Question;
-import com.javaweb.edutest.model.Question_Test;
-import com.javaweb.edutest.model.compositekey.Question_TestPK;
+import com.javaweb.edutest.model.QuestionTest;
+import com.javaweb.edutest.model.compositekey.QuestionTestPK;
 import com.javaweb.edutest.repository.CategoryRepository;
 import com.javaweb.edutest.repository.QuestionRepository;
-import com.javaweb.edutest.repository.Question_TestRepository;
 import com.javaweb.edutest.repository.TestRepository;
 import com.javaweb.edutest.service.QuestionService;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +22,11 @@ import java.util.*;
 @Service
 @RequiredArgsConstructor
 public class QuestionServiceImpl implements QuestionService {
+
     private final QuestionMapper questionMapper;
     private final QuestionRepository questionRepository;
     private final CategoryRepository categoryRepository;
     private final TestRepository testRepository;
-    private final Question_TestRepository question_testRepository;
 
     @Override
     public List<QuestionResponseDTO> getQuestions() {
@@ -56,15 +55,16 @@ public class QuestionServiceImpl implements QuestionService {
         var test = testRepository.findById(testId).orElseThrow(
                 () -> new ResourceNotFoundException("test not found with id " +testId)
         );
-        Question_Test questionTest = Question_Test.builder()
-                .id(Question_TestPK.builder()
+        QuestionTest questionTest = QuestionTest.builder()
+                .id(QuestionTestPK.builder()
                         .questionId(newQuestion.getId())
                         .testId(test.getId())
                         .build())
                 .question(newQuestion)
                 .test(test)
                 .build();
-        question_testRepository.saveAndFlush(questionTest);
+        newQuestion.getQuestionTests().add(questionTest);
+        questionRepository.save(newQuestion);
         return newQuestion.getId();
     }
 
@@ -74,19 +74,35 @@ public class QuestionServiceImpl implements QuestionService {
                 () -> new ResourceNotFoundException("test not found with id " +testId)
         );
         List<Long> questionIds = request.get("questionIds");
-        var questionTests = new ArrayList<Question_Test>();
-        questionIds.forEach(questionId ->{
-            Question_Test questionTest = Question_Test.builder()
-                    .id(Question_TestPK.builder()
+        List<Question> questions = new ArrayList<>();
+        questionIds.forEach(questionId -> {
+            Question question = findQuestionById(questionId);
+            QuestionTest questionTest = QuestionTest.builder()
+                    .id(QuestionTestPK.builder()
                             .questionId(questionId)
                             .testId(test.getId())
                             .build())
                     .test(test)
                     .question(findQuestionById(questionId))
                     .build();
-            questionTests.add(questionTest);
-            }
-            );
+            question.getQuestionTests().add(questionTest);
+            questions.add(findQuestionById(questionId));
+        });
+
+//        var questionTests = new ArrayList<QuestionTest>();
+//        questionIds.forEach(questionId ->{
+//            QuestionTest questionTest = QuestionTest.builder()
+//                    .id(QuestionTestPK.builder()
+//                            .questionId(questionId)
+//                            .testId(test.getId())
+//                            .build())
+//                    .test(test)
+//                    .question(findQuestionById(questionId))
+//                    .build();
+//            questionTests.add(questionTest);
+//            }
+//            );
+        questionRepository.saveAll(questions);
     }
 
     @Override
