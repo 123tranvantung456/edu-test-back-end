@@ -68,7 +68,13 @@ public class UserController {
 
     @PatchMapping("/{userId}")
     public ResponseData<?> updateStatus(@PathVariable long userId, @RequestBody UserStatus userStatus){
-        return null;
+        try {
+//            userService.updateUser();
+            return null;
+        }
+        catch (Exception e){
+            return new ResponseData<>(HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase());
+        }
     }
 
     @DeleteMapping("/{id}")

@@ -36,6 +36,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateStatus() {
+
+    }
+
+    @Override
     public void updateUser(long userId, UserRequestDTO userRequestDTO) {
         User userCurrent = findUserById(userId);
         userMapper.mapToUser(userCurrent, userRequestDTO);

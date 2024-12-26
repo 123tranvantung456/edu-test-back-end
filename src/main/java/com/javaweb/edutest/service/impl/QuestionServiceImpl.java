@@ -89,19 +89,6 @@ public class QuestionServiceImpl implements QuestionService {
             questions.add(findQuestionById(questionId));
         });
 
-//        var questionTests = new ArrayList<QuestionTest>();
-//        questionIds.forEach(questionId ->{
-//            QuestionTest questionTest = QuestionTest.builder()
-//                    .id(QuestionTestPK.builder()
-//                            .questionId(questionId)
-//                            .testId(test.getId())
-//                            .build())
-//                    .test(test)
-//                    .question(findQuestionById(questionId))
-//                    .build();
-//            questionTests.add(questionTest);
-//            }
-//            );
         questionRepository.saveAll(questions);
     }
 
